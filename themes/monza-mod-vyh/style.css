@@ -1,0 +1,29 @@
+/*
+    Theme Name: Monza Mod
+    Template: monza
+    Description: Monza child theme with style fixes & tweaks and a hack for separating one category's posts from the rest
+    Author: Nicki Hoffman
+    Author URI: https://arestelle.net
+    Version: 1.0.1
+    License: GNU General Public License v2 or later
+    License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+/*--------------------------------------------------------------
+# Monza theme overrides
+--------------------------------------------------------------*/
+blockquote {
+	margin: 0px 5% 15px 5%;
+	padding: 20px 20px 1px 20px;
+	border: 0;
+	border-left: 3px solid #ddd;
+	font-style: normal;
+	text-align: justify;
+}
+
+.site-footer {
+	text-align: center;
+	border-top: 1px solid #eee;
+	padding: 50px 0 100px 0;
+	margin-top: 50px;
+}
