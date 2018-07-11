@@ -32,7 +32,7 @@ add_action( 'wp_enqueue_scripts', 'monza_mod_enqueue_styles' );
  */
 if ( ! function_exists( 'my_separate_category' ) ) {
     function my_separate_category() {
-        // Posts of this category are excluded from the home page and appear alone on their category archive
+        // Posts of this category are excluded from the home page and appear alone on searches from their category archive
         return 1;
     }
 }

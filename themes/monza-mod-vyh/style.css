@@ -13,17 +13,17 @@
 # Monza theme overrides
 --------------------------------------------------------------*/
 blockquote {
-	margin: 0px 5% 15px 5%;
-	padding: 20px 20px 1px 20px;
-	border: 0;
-	border-left: 3px solid #ddd;
-	font-style: normal;
-	text-align: justify;
+    margin: 0px 5% 15px 5%;
+    padding: 20px 20px 1px 20px;
+    border: 0;
+    border-left: 3px solid #ddd;
+    font-style: normal;
+    text-align: justify;
 }
 
 .site-footer {
-	text-align: center;
-	border-top: 1px solid #eee;
-	padding: 50px 0 100px 0;
-	margin-top: 50px;
+    text-align: center;
+    border-top: 1px solid #eee;
+    padding: 50px 0 100px 0;
+    margin-top: 50px;
 }
