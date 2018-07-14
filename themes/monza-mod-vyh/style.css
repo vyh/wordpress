@@ -4,7 +4,7 @@
     Description: Monza child theme with style fixes & tweaks and a hack for separating one category's posts from the rest
     Author: Nicki Hoffman
     Author URI: https://arestelle.net
-    Version: 1.0.2
+    Version: 1.0.3
     License: GNU General Public License v2 or later
     License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -37,4 +37,19 @@ blockquote {
 .wp-caption img {
     padding: 6px;
     border: 1px solid #efefef;
+}
+
+/* Reduced padding on archive pages */
+.post .entry-header, .post .entry-content, .post .entry-more {
+    padding-left: 100px;
+    padding-right: 100px;
+}
+
+/* Quieter pre style */
+pre {
+    background: #e9e9e9;
+    color: #444;
+    font-family: Courier New, "Courier 10 Pitch", Courier, monospace;
+    font-size: 14px;
+    font-size: 0.875rem;
 }
