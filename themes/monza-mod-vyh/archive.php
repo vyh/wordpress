@@ -14,25 +14,14 @@ get_header(); ?>
             if ( have_posts() ) : ?>
             <header class="page-header">
                 <?php
-                /* Define my_separate_category where you keep your php snippets */
-                if ( ! is_category( my_separate_category() ) ) {
+                if ( is_post_type_archive( 'works' ) ) {
+                    echo '<h1 class="page-title">Bibliography</h1>';
+                } else if ( is_post_type_archive( 'quotes' ) ) {
+                    echo '<h1 class="page-title">Quotes</h1>';
+                } else {
                     the_archive_title( '<h1 class="page-title">', '</h1>' );
-                    the_archive_description( '<div class="archive-description">', '</div>' );
-                } else if ( is_tag() ) {
-                    /* If we are on a tag archive under 'separate' category, add Tag: header */
-                    $uri = explode('/', explode('?', $_SERVER['REQUEST_URI'])[0]);
-                    $i = array_search('tag', $uri);
-                    if ($i) {
-                        $tag_slug = explode(',', $uri[$i + 1])[0];
-                        $tag_name = get_term_by('slug', $tag_slug, 'post_tag')->name;
-                        echo '<h1 class="page-title">Tag: '.$tag_name.'</h1>';
-                    }
-                } else if ( is_month() ) {
-                    /* If we are on a month archive under 'separate' category, add Month: header */
-                    echo '<h1 class="page-title">Month:';
-                    single_month_title(' ');
-                    echo '</h1>';
                 }
+                the_archive_description( '<div class="archive-description">', '</div>' );
                 ?>
             </header><!-- .page-header -->
             <?php

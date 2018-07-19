@@ -45,21 +45,6 @@ if ( ! function_exists( 'my_social_links' ) ) {
 
 
 /**
- *  Filter out "separate" category posts from home page results;
- *  my_separate_category should be stored where you keep php snippets and return an int.
- */
-if ( ! function_exists( 'filter_home_posts' ) ) {
-    function filter_home_posts( $query ) {
-        if( $query->is_home() && $query->is_main_query() ) {
-            $my_home_categories = array( - my_separate_category() );
-            $query->set( 'cat', $my_home_categories );
-        }
-    }
-}
-add_filter( 'pre_get_posts', 'filter_home_posts' );
-
-
-/**
  *  Retrieve a post object by its slug; returns null if not found.
  */
 function get_post_by_slug($slug) {
@@ -76,67 +61,57 @@ function get_post_by_slug($slug) {
 
 
 /**
- *  Return the object's term_id; for array_mapping w/o a dynamically defined function.
- */
-function id_from_obj( $term ) {
-    return $term->term_id;
-}
-
-
-/**
- *  Return true if the post has the specified category, false otherwise.
- */
-function has_cat($cat_id, $post) {
-    if ( ! $post ) return false;
-    $category_ids = array_map( id_from_obj, get_the_category($post->ID) );
-    return in_array( $cat_id, $category_ids );
-}
-
-
-/**
- *  Filter tag archive results based on:
- *  1. "cat" query arg from current request uri; or
- *  2. "cat" query arg from referring request uri; or
+ *  Filter taxonomy archive and search results based on:
+ *  1. "post_type" query arg from current request uri; or
+ *  2. "post_type" query arg from referring request uri; or
  *  3. whether the referring request uri was/was not:
- *     a. the "separate" category archive or
- *     b. a post with the "separate" category
+ *     a. the post type archive or
+ *     b. a post of the post type
  */
-if ( ! function_exists( 'filter_tag_query' ) ) {
+if ( ! function_exists( 'filter_tax_query' ) ) {
 
-    function filter_tag_query( $query ) {
-        if ( $query->is_tag() || $query->is_search() || $query->is_month() ) {
+    function filter_tax_query( $query ) {
+        if ( $query->is_tax() || $query->is_search() ) {
             // if a category filter is specified in the current uri params, it will be used
-            if ( isset( $_GET['cat'] ) ) return;
+            if ( isset( $_GET['post_type'] ) ) return;
 
             // get query params from the referring uri (== current uri if wp_get_referer returns false)
             $referer = wp_get_referer();
             $referer = $referer ? $referer : $_SERVER['REQUEST_URI'];
             $query_string = parse_url( $referer, PHP_URL_QUERY );
 
-            // if a category filter was specified in the referring uri params, use it
+            // if a post type filter was specified in the referring uri params, use it
             if ( $query_string ) {
                 parse_str( $query_string, $params );
-                if ( $params['cat'] ) {
-                    wp_redirect( esc_url_raw( add_query_arg( 'cat', $params['cat'] ) ) );
+                if ( $params['post_type'] ) {
+                    wp_redirect( esc_url_raw( add_query_arg( 'post_type', $params['post_type'] ) ) );
                     exit;
                 }
             }
 
-            // we don't have a filter from the current or referring uri; determine the filter and redirect
-            $sep_cat = my_separate_category();
+            // does the referring url contain the post_type?
             $referer = explode( '/', parse_url( $referer, PHP_URL_PATH ) );
+            $post_type = $referer[0] ? $referer[0] : $referer[1];  // in case of front slashes
+            if ( in_array( $post_type, array( 'quotes', 'works' ) ) ) {
+                wp_redirect( esc_url_raw( add_query_arg( 'post_type', $post_type ) ) );
+                exit;
+            }
+
+            // no; ok, see if it was a post & what its type was
             $slug = array_pop( $referer );  // wordpress uses trailing slashes so this is probably empty
             $slug = $slug ? $slug : array_pop( $referer );
-            $type = array_pop( $referer );
-            $is_quote = ( $type == 'category' && $slug == 'quotes' ) || has_cat( $sep_cat, get_post_by_slug( $slug ) );
-            $category_filter = $is_quote ? $sep_cat : - $sep_cat;
-            wp_redirect( esc_url_raw( add_query_arg( 'cat', $category_filter ) ) );
-            exit;
+            $prev_post = get_post_by_slug( $slug );
+            if ( ! $prev_post ) return;
+            $post_type = get_post_type( $prev_post );
+            if ( in_array( $post_type, array( 'quotes', 'works' ) ) ) {
+                wp_redirect( esc_url_raw( add_query_arg( 'post_type', $post_type ) ) );
+                exit;
+            }
         }
     }
 
 }
-add_action( 'pre_get_posts', 'filter_tag_query' );
+add_action( 'pre_get_posts', 'filter_tax_query' );
 
 
 /**
@@ -144,10 +119,46 @@ add_action( 'pre_get_posts', 'filter_tag_query' );
  */
 if ( ! function_exists( 'filter_search_result_type' ) ) {
     function filter_search_result_type( $query ) {
-        if ( $query->is_search() ) $query->set( 'post_type', 'post' );
+        if ( $query->is_search() && ! isset( $_GET['post_type'] ) )
+            $query->set( 'post_type', 'post' );
     }
 }
 add_filter( 'pre_get_posts', 'filter_search_result_type' );
+
+
+/**
+ * Filter quote queries with ?work_quoted=ID in them
+ */
+if ( ! function_exists( 'filter_quote_work_lookup' )) {
+    function filter_quote_work_lookup( $query ) {
+        if( isset($query->query_vars['post_type']) && $query->query_vars['post_type'] == 'quotes' ) {
+            if ( isset( $_GET['work_quoted'] ) ) {
+                $query->set( 'meta_query', array(
+                    array(
+                        'key' => 'work_quoted',
+                        'value' => '"'.$_GET['work_quoted'].'"',
+                        'compare' => 'LIKE'
+                ) ) );
+            }
+        }
+    }
+}
+add_filter( 'pre_get_posts', 'filter_quote_work_lookup' );
+
+
+/**
+ * Sort works by first author then title
+ */
+if ( ! function_exists( 'sort_works_alphabetically' ) ) {
+    function sort_works_alphabetically( $query ) {
+        if ( $query->is_post_type_archive( 'works' ) ) {
+            $query->set( 'meta_key', 'sort_credit' );
+            $query->set( 'orderby', array( 'meta_value' => 'ASC',
+                                           'title' => 'ASC' ) );
+        }
+    }
+}
+add_filter( 'pre_get_posts', 'sort_works_alphabetically' );
 
 
 require get_template_directory() . '/../monza-mod-vyh/inc/template-tags.php';

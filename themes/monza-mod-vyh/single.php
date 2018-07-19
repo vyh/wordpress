@@ -15,24 +15,19 @@ get_header();
         <?php
         while ( have_posts() ) :
             the_post();
-            get_template_part( 'template-parts/content', get_post_type() );
-            if ( get_the_tags() ) { ?>
+            $post_type = get_post_type();
+            get_template_part( 'template-parts/content', $post_type );
+            if ( 'post' == $post_type && get_the_tags() ) { ?>
             <div class="post-tags"><?php the_tags(); ?></div><?php
+            }
+            else if ( 'quotes' == $post_type && get_the_terms($post->ID, 'topic') ) { ?>
+            <div class="post-tags"><?php the_terms($post->ID, 'topic', 'Topics: '); ?></div><?php
             } ?>
 
             <div class="entry-share">
                 <?php get_template_part('template-parts/content', 'social-sharing'); ?>
             </div>
             <?php
-            /* Define my_separate_category wherever you keep your php snippets */
-            $sep_cat = my_separate_category();
-            if ( in_category($sep_cat) ) {
-                $nav_args = array('in_same_term'   => true,
-                                  'taxonomy'       => 'category');
-            } else {
-                $nav_args = array('excluded_terms' => "$sep_cat",
-                                  'taxonomy'       => 'category');
-            }
             the_post_navigation( $nav_args );
 
             // If comments are open or we have at least one comment, load up the comment template.

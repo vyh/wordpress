@@ -4,7 +4,7 @@
     Description: Monza child theme with style fixes & tweaks and a hack for separating one category's posts from the rest
     Author: Nicki Hoffman
     Author URI: https://arestelle.net
-    Version: 1.0.3
+    Version: 1.1.2
     License: GNU General Public License v2 or later
     License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -39,10 +39,33 @@ blockquote {
     border: 1px solid #efefef;
 }
 
-/* Reduced padding on archive pages */
-.post .entry-header, .post .entry-content, .post .entry-more {
+/* Reduced padding on archive pages; apply post styles to quotes and works */
+.post, .quotes, .works {
+    margin-bottom: 60px;
+}
+
+.post .entry-header, .post .entry-content, .post .entry-more, .quotes .entry-header, .quotes .entry-content, .quotes .entry-more, .works .entry-header, .works .entry-content, .works .entry-more {
     padding-left: 100px;
     padding-right: 100px;
+}
+
+
+.quotes .entry-header, .quotes .entry-more, .works .entry-header, .works .entry-more {
+    text-align: center;
+}
+
+
+.single .quotes .entry-content, .single .works .entry-content {
+    text-align: inherit;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+@media(max-width: 767px){
+    .quotes .entry-header, .quotes .entry-content, .quotes .entry-more, .works .entry-header, .works .entry-content, .works .entry-more {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
 }
 
 /* Quieter pre style */
