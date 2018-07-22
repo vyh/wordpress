@@ -204,7 +204,7 @@ function x_get_the_posts_navigation( $args = array() ) {
  * @return array of objects
  */
 function plugin_get_the_ordered_terms( $terms, $id, $taxonomy ) {
-    if ( 'source' != $taxonomy ) // only ordering tags for now but could add other taxonomies here.
+    if ( 'source' != $taxonomy )
         return $terms;
 
     $terms = wp_cache_get($id, "{$taxonomy}_relationships_sorted");
