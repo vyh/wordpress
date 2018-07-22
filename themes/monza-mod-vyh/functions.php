@@ -219,10 +219,21 @@ add_filter( 'get_the_terms', 'plugin_get_the_ordered_terms', 10, 4 );
 
 
 /**
- * Adds sorting by term_order to source by doing a partial register replacing the default
+ * Adds sorting by term_order to source by doing a partial register replacing the default;
+ * version of this from core.trac.wordpress above changed all the names from Source(s) to Tag(s);
+ * this version from https://wordpress.stackexchange.com/questions/161788/how-to-modify-a-taxonomy-thats-already-registered
+ * minus a 3rd arg to add_action (11) since this was overriding the already registered tax anyway
  */
 function plugin_register_sorted_sources() {
-    register_taxonomy( 'source', 'works', array( 'sort' => true, 'args' => array( 'orderby' => 'term_order' ) ) );
+    // get the arguments of the already-registered taxonomy
+    $source_args = get_taxonomy( 'source' ); // returns an object
+
+    // make changes to the args; in this example there are three changes; again, note that it's an object
+    $source_args->sort = true;
+    $source_args->orderby = 'term_order';
+
+    // re-register the taxonomy
+    register_taxonomy( 'source', array( 'quotes', 'works' ), (array) $source_args );
 }
 add_action( 'init', 'plugin_register_sorted_sources' );
 
