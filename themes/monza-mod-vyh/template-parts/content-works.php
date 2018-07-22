@@ -28,7 +28,8 @@
         // include authors (each linked to 'source' archive of quotes) on title line, first one last-name-first
         if ( $authors ) {
             $author = explode(' ', $authors[0]->name);
-            $author = join(', ', array(array_pop($author), join(' ', $author)));  // L.N. first
+            if ( $author[1] ) $author = join(', ', array(array_pop($author), join(' ', $author)));  // L.N. first
+            else $author = $author[0];  // one-word name, e.g. Aristotle
             echo  '<a href="/source/' . $authors[0]->slug . '?post_type=quotes">' . $author . '</a>';
             // the other authors
             foreach ( array_slice($authors, 1) as $author ) {
