@@ -115,11 +115,11 @@ add_action( 'pre_get_posts', 'filter_tax_query' );
 
 
 /**
- *  Filter search results so that they only include posts.
+ *  Filter search results so that they only include posts...but not on admin queries.
  */
 if ( ! function_exists( 'filter_search_result_type' ) ) {
     function filter_search_result_type( $query ) {
-        if ( $query->is_search() && ! isset( $_GET['post_type'] ) )
+        if ( $query->is_search() && ! is_admin() && ! isset( $_GET['post_type'] ) )
             $query->set( 'post_type', 'post' );
     }
 }
@@ -236,6 +236,21 @@ function plugin_register_sorted_sources() {
     register_taxonomy( 'source', array( 'quotes', 'works' ), (array) $source_args );
 }
 add_action( 'init', 'plugin_register_sorted_sources' );
+
+
+/**
+ * hook into handler for rest api's POST quotes endpoint, adding custom taxonomy terms
+ * h/t https://stackoverflow.com/a/47267372
+ */
+function action_rest_insert_quotes( $post, $request, $true ) {
+    $params = $request->get_json_params();
+    if(array_key_exists("terms", $params)) {
+        foreach($params["terms"] as $taxonomy => $terms) {
+            wp_set_post_terms($post->ID, $terms, $taxonomy);
+        }
+    }
+}
+add_action("rest_insert_quotes", "action_rest_insert_quotes", 10, 3);
 
 
 require get_template_directory() . '/../monza-mod-vyh/inc/template-tags.php';
