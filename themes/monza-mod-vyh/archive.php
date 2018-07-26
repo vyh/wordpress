@@ -39,11 +39,8 @@ get_header(); ?>
 
                 endwhile;
 
-                // previous link on left, next on right; diff text on Works archive
-                if ( is_post_type_archive( 'works' ) )
-                    echo x_get_the_posts_navigation( array( 'prev_text' => 'Previous entries', 'next_text' => 'Next entries') );
-                else
-                    echo x_get_the_posts_navigation();
+                // previous link on left, next on right, refer to 'page' not 'posts'
+                echo x_get_the_posts_navigation();
 
             else :
 
