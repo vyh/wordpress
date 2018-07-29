@@ -24,7 +24,7 @@
         }
         $authors = get_the_terms($post->ID, 'source');
         $translators = $post->translators; ?>
-        <h5><?php
+        <h4><?php
         // include authors (each linked to 'source' archive of quotes) on title line, first one last-name-first
         if ( $authors ) {
             $author = explode(' ', $authors[0]->name);
@@ -39,11 +39,11 @@
         }
         // link title to quote search instead of work "post"
         the_title( '<em><a href="/quotes/?work_quoted=' . $post->ID . '">', '</a></em>' ); ?>
-        </h5><?php
+        </h4><?php
         $translators = get_field( 'translators' );
         if ( $translators ) {
         ?>
-        <h6><?php
+        <h5><?php
             // print out the translators, if any, below the author/title line
             if ( $translators[1] ) echo 'translators: ';
             else echo 'translator: ';
@@ -51,7 +51,7 @@
             foreach ( array_slice( $translators, 1 ) as $translator ) {
                 echo '; ' . $translator->name;
             } ?>
-        </h6><?php
+        </h5><?php
         } ?>
         <span class="posted-on"><?php echo $post->year; ?></span>
     </header>

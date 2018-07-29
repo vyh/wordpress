@@ -18,7 +18,7 @@
             the_title( '<h4>', '</h4>' );
             monza_posted_on();
         } else {
-            the_title( '<h5><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h5>' );
+            the_title( '<h4><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h4>' );
         }
     ?>
     </header>
