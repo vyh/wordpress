@@ -14,14 +14,27 @@ get_header(); ?>
             if ( have_posts() ) : ?>
             <header class="page-header">
                 <?php
-                if ( is_post_type_archive( 'works' ) ) {
-                    echo '<h1 class="page-title">Bibliography</h1>';
-                } else if ( is_post_type_archive( 'quotes' ) ) {
-                    echo '<h1 class="page-title">Quotes</h1>';
+                if ( is_post_type_archive( array( 'quotes', 'works' ) ) ) {
+                    $p_title = is_post_type_archive('works') ? 'Bibliography' : 'Quotes';
+                    echo '<h1 class="page-title">' . $p_title . '</h1>';
+                    the_archive_description( '<div class="archive-description">', '</div>' );
+                    if ( is_tax() ) {
+                        $tname = get_query_var('taxonomy');
+                        $tterm = get_query_var('term');
+                        $tterm = get_term_by( 'slug', $tterm, $tname )->name;
+                        $tname = 'source' == $tname ? 'author' : $tname;
+                        if ( $tname || $tterm ) echo '<h3>' . ucwords($tname) . ': ' . $tterm . '</h3>';
+                    } else {
+                        $wid = $_GET['work_quoted'];
+                        if ( $wid ) {
+                            $wtitle = get_post($wid)->post_title;
+                            if ( $wtitle ) echo '<h3>Work: <em>' . $wtitle . '</em></h3><br />';
+                        }
+                    }
                 } else {
                     the_archive_title( '<h1 class="page-title">', '</h1>' );
+                    the_archive_description( '<div class="archive-description">', '</div>' );
                 }
-                the_archive_description( '<div class="archive-description">', '</div>' );
                 ?>
             </header><!-- .page-header -->
             <?php
