@@ -4,7 +4,7 @@
     Description: Monza child theme with style fixes & tweaks and separate post types & taxonomies for the quotes section
     Author: Nicki Hoffman
     Author URI: https://arestelle.net
-    Version: 1.1.7
+    Version: 1.1.9
     License: GNU General Public License v2 or later
     License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -79,4 +79,43 @@ pre {
     font-family: Courier New, "Courier 10 Pitch", Courier, monospace;
     font-size: 14px;
     font-size: 0.875rem;
+}
+
+/* Monza uses bolder, which is between normal and bold, in this theme apparently 400. */
+b,
+strong {
+    font-weight: 500;
+}
+
+/* Comment style adjustments */
+.comment-list, .comment-list .children, ul, ol {
+    margin-left: 0;
+    padding: 0 0 0 25px;
+}
+
+li p {
+    margin-bottom: 10px;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0 50px;
+}
+
+.comment {
+    padding-top: 15px;
+}
+
+.comment-list .comment-author {
+    float: left;
+}
+
+.comment-list .comment-metadata {
+    float: right;
+    padding: 4px 0;
+}
+
+.comment-list .comment-content {
+    clear: both;
+    padding-top: 10px;
 }
