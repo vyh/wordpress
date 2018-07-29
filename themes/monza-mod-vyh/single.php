@@ -19,9 +19,21 @@ get_header();
             get_template_part( 'template-parts/content', $post_type );
             if ( 'post' == $post_type && get_the_tags() ) { ?>
             <div class="post-tags"><?php the_tags(); ?></div><?php
-            }
-            else if ( 'quotes' == $post_type && get_the_terms($post->ID, 'topic') ) { ?>
-            <div class="post-tags"><?php the_terms($post->ID, 'topic', 'Topics: '); ?></div><?php
+            } else if ( 'quotes' == $post_type ) {
+                $works = get_field('work_quoted');
+                echo '<div class="post-tags">Works: ';
+                echo '<a href="/quotes/?work_quoted='. $works[0]->ID .'">' . $works[0]->post_title . '</a>';
+                foreach ( array_slice($works, 1) as $work )
+                    echo ', <a href="/quotes/?work_quoted='. $work->ID .'">' . $work->post_title . '</a>';
+                echo '</div>';
+                echo '<div class="post-tags">';
+                the_terms($post->ID, 'source', 'Authors: ');
+                echo '</div>';
+                if ( get_the_terms( $post->ID, 'topic' ) ) {
+                    echo '<div class="post-tags">';
+                    the_terms($post->ID, 'topic', 'Topics: ');
+                    echo '</div>';
+                }
             } ?>
 
             <div class="entry-share">

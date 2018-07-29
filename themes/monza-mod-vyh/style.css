@@ -4,7 +4,7 @@
     Description: Monza child theme with style fixes & tweaks and separate post types & taxonomies for the quotes section
     Author: Nicki Hoffman
     Author URI: https://arestelle.net
-    Version: 1.1.11
+    Version: 1.1.12
     License: GNU General Public License v2 or later
     License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -142,4 +142,75 @@ li p {
 .comment-list .comment-content {
     clear: both;
     padding-top: 10px;
+}
+
+/* Definition list styles */
+.indent {
+    margin: 0 5% 0 5%;
+}
+
+dl {
+    width: 100%;
+    float: left;
+    clear: left;
+}
+
+dl.indent {
+    width: 90%;
+}
+
+dl#coursework, dl#skills {
+    margin-bottom: 1em;
+}
+
+dt {
+    font-family: Prociono, "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-weight: bolder;
+    float: left;
+    clear: left;
+}
+
+dd {
+    width: inherit;
+    margin: 0.5em 5% 1em 5%;
+    float: left;
+    clear: left;
+}
+
+.inline dt, .inline dd {
+    display: inline-block;
+}
+
+.inline dt {
+    width: 5em;
+    max-width: 5em;
+    margin-top: 0.5em;
+    vertical-align: top;
+    font-weight: normal;
+    font-style: italic;
+    white-space: nowrap;
+}
+
+.inline dd {
+    clear: none;
+    width: calc(100% - 5.5em);
+    margin: 0.5em 0 0 0.5em;
+    padding: 0 0.5em 0 0.5em;
+    border-left: 1px solid;
+    vertical-align: top;
+}
+
+.inline dt.course-name {
+    text-align: right;
+    font-style: normal;
+}
+
+.inline dd.courses {
+    border: 0px none;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.inline dt.no-top-margin, dd.no-top-margin {
+    margin-top: 0;
 }
