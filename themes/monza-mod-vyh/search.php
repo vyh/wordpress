@@ -58,8 +58,8 @@ get_header();
     </div>
 </div>
 
-<!--         </main><!-- #main -->
-    </section><!-- #primary --> -->
+<!--         </main> --><!-- #main -->
+<!--    </section> --><!-- #primary -->
 
 <?php
 get_footer();
