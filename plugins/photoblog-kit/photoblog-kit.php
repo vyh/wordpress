@@ -2,16 +2,16 @@
 /*
 Plugin Name: Photoblog Kit
 Description: Post types, taxonomies, and tools for a photography blog. Exif data icons courtesy icons8.com.
-Version: 0.1.0
+Version: 0.1.1
 Author: Nicki Hoffman
 Author URI: https://arestelle.net
 Text Domain: photoblog-kit
 */
 
 /**
- *  Register Photo post type
+ *  Register Photo post type, Album and Keyword taxonomies
  */
-function create_photo_type() {
+function pk_register_type_and_tax() {
     register_post_type(
         'photos',
         array(
@@ -32,8 +32,26 @@ function create_photo_type() {
 			'query_var' => 'photo'
         )
     );
+
+    register_taxonomy(
+        'keywords',
+        'photos',
+        array(
+            'label' => __( 'Keywords', 'photoblog-kit' ),
+            'rewrite' => array( 'slug' => 'keyword' )
+        )
+    );
+
+    register_taxonomy(
+        'albums',
+        'photos',
+        array(
+            'label' => __( 'Albums', 'photoblog-kit' ),
+            'rewrite' => array( 'slug' => 'album' )
+        )
+    );
 }
-add_action( 'init', 'create_photo_type' );
+add_action( 'init', 'pk_register_type_and_tax' );
 
 
 /**
@@ -44,45 +62,13 @@ function pk_rewrite_flush() {
     // Note: "add" is written with quotes, as CPTs don't get added to the DB,
     // They are only referenced in the post_type column with a post entry,
     // when you add a post of this CPT.
-    create_photo_type();
+    pk_register_type_and_tax();
 
     // ATTENTION: This is *only* done during plugin activation hook in this example!
     // You should *NEVER EVER* do this on every page load!!
     flush_rewrite_rules();
 }
 register_activation_hook( __FILE__, 'pk_rewrite_flush' );
-
-
-/**
- *  Register Keyword taxonomy
- */
-function create_keyword_tax() {
-    register_taxonomy(
-        'keywords',
-        'photos',
-        array(
-            'label' => __( 'Keywords', 'photoblog-kit' ),
-            'rewrite' => array( 'slug' => 'keyword' )
-        )
-    );
-}
-add_action( 'init', 'create_keyword_tax' );
-
-
-/**
- *  Register Album taxonomy
- */
-function create_album_tax() {
-    register_taxonomy(
-        'albums',
-        'photos',
-        array(
-            'label' => __( 'Albums', 'photoblog-kit' ),
-            'rewrite' => array( 'slug' => 'album' )
-        )
-    );
-}
-add_action( 'init', 'create_album_tax' );
 
 
 /**
