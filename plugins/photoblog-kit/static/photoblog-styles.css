@@ -1,0 +1,40 @@
+/*
+    Custom CSS styles for the Photoblog Kit plugin by Nicki Hoffman (https://arestelle.net).
+*/
+
+div .pk-exif {
+    width: 230px;
+	display: block;
+    float: right;
+	padding: 5px 0px 5px 5px;
+    margin-left: 10px;
+    border-left: 1px solid #999;
+    font-size: small;
+}
+
+div .pk-full {
+	padding: 5px;
+    width: 100%;
+    vertical-align: middle;
+}
+
+div .pk-half {
+	padding: 5px;
+    width: 50%;
+    vertical-align: middle;
+}
+
+div .pk-left {
+    float: left;
+    clear: left;
+}
+
+div .pk-right {
+    float: right;
+    clear: right;
+}
+
+.pk-icon {
+    width: 25px;
+    padding-right: 3px;
+}
