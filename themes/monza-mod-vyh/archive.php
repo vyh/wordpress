@@ -23,7 +23,7 @@ get_header(); ?>
                         $tterm = get_query_var('term');
                         $tterm = get_term_by( 'slug', $tterm, $tname )->name;
                         $tname = 'source' == $tname ? 'author' : $tname;
-                        if ( $tname || $tterm ) echo '<h3>' . ucwords($tname) . ': ' . $tterm . '</h3>';
+                        if ( $tname || $tterm ) echo '<h3>' . ucwords($tname) . ': ' . $tterm . '</h3><br />';
                     } else {
                         $wid = $_GET['work_quoted'];
                         if ( $wid ) {
@@ -61,7 +61,7 @@ get_header(); ?>
 
             endif;
             ?>
-        </div>
+        </div>
         <div class="col-md-3 col-sm-4 sidebar">
             <?php get_sidebar(); ?>
         </div>

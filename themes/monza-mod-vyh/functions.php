@@ -95,6 +95,9 @@ if ( ! function_exists( 'filter_tax_query' ) ) {
             if ( in_array( $post_type, array( 'quotes', 'works' ) ) ) {
                 wp_redirect( esc_url_raw( add_query_arg( 'post_type', $post_type ) ) );
                 exit;
+            } elseif ( $post_type === 'photographs' ) {
+                wp_redirect( esc_url_raw( add_query_arg( 'post_type', 'photos' ) ) );
+                exit;
             }
 
             // no; ok, see if it was a post & what its type was
@@ -103,7 +106,7 @@ if ( ! function_exists( 'filter_tax_query' ) ) {
             $prev_post = get_post_by_slug( $slug );
             if ( ! $prev_post ) return;
             $post_type = get_post_type( $prev_post );
-            if ( in_array( $post_type, array( 'quotes', 'works' ) ) ) {
+            if ( in_array( $post_type, array( 'photos', 'quotes', 'works' ) ) ) {
                 wp_redirect( esc_url_raw( add_query_arg( 'post_type', $post_type ) ) );
                 exit;
             }
