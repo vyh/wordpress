@@ -29,7 +29,7 @@ function pk_register_type_and_tax() {
                 'post-formats'
             ),
             'rewrite' => array( 'slug' => 'photographs' ),
-			'query_var' => 'photo'
+            'query_var' => 'photo'
         )
     );
 
@@ -76,7 +76,7 @@ register_activation_hook( __FILE__, 'pk_rewrite_flush' );
  */
 $pk_meta_fields = array(
     'taken' => array(
-        'id' => '_timestamp',
+        'id' => 'timestamp',
         'label' => 'Date Taken',
         'type' => 'text',
         'format' => 'datetime'
@@ -293,7 +293,7 @@ function pk_get_exif_array( $post_id ) {
     // Date taken, from post or exif, priority given to post
     $taken = get_post_meta( $post_id, $pk_meta_fields['taken']['id'], true );
     if ( ! $taken ) $taken = $exif['EXIF']['DateTimeOriginal'];
-	if ( $taken ) $arr['taken'] = date_i18n('j F Y', strtotime( $taken ) );
+    if ( $taken ) $arr['taken'] = date_i18n('j F Y', strtotime( $taken ) );
 
     return $arr;
 }
