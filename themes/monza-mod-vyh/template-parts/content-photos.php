@@ -12,7 +12,7 @@
         if ( is_singular() ) {
             the_title( '<h4>', '</h4>' );
         } else {
-            the_title( '<h4><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h4>' );
+            the_title( '<h5><a href="' . esc_url( get_permalink() ) . '" rel="bookmark">', '</a></h5>' );
         }
     ?>
     </header>
@@ -22,7 +22,5 @@
     <div class="entry-content">
         '; the_content(); echo '
     </div>';
-    } else {
-        echo '<br />';
     } ?>
 </article>
