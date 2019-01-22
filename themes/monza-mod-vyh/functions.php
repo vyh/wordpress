@@ -256,6 +256,22 @@ function action_rest_insert_quotes( $post, $request, $true ) {
 add_action("rest_insert_quotes", "action_rest_insert_quotes", 10, 3);
 
 
+/**
+ * Enable use of orderby=timestamp to sort by timestamp
+ */
+function mm_pk_reformat_orderby( $query ) {
+	if ( ! isset( $query->query_vars['orderby'] ) )
+		return;
+
+	$order = $query->query_vars['order'] ? $query->query_vars['order'] : 'DESC';
+	if ( $query->query_vars['orderby'] == 'timestamp' ) {
+		$query->set( 'meta_key', 'timestamp' );
+		$query->set( 'orderby', array( 'meta_value' => $order ) );
+	}
+}
+add_action( 'pre_get_posts', 'mm_pk_reformat_orderby' );
+
+
 require get_template_directory() . '/../monza-mod-vyh/inc/template-tags.php';
 
 ?>
