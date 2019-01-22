@@ -2,7 +2,7 @@
 /*
 Plugin Name: Photoblog Kit
 Description: Post types, taxonomies, and tools for a photography blog. Exif data icons courtesy icons8.com.
-Version: 0.1.1
+Version: 0.1.2
 Author: Nicki Hoffman
 Author URI: https://arestelle.net
 Text Domain: photoblog-kit
@@ -456,5 +456,21 @@ function pk_append_content( $content ) {
     return $content . "\n" . $link_html . $tax_html;
 }
 add_filter( 'the_content', 'pk_append_content' );
+
+
+/**
+ * Enable use of orderby=timestamp to sort by timestamp
+ */
+function pk_reformat_orderby( $query ) {
+    if ( ! isset( $query->query_vars['orderby'] ) )
+        return;
+
+    $order = $query->query_vars['order'] ? $query->query_vars['order'] : 'DESC';
+    if ( $query->query_vars['orderby'] == 'timestamp' ) {
+        $query->set( 'meta_key', 'timestamp' );
+        $query->set( 'orderby', array( 'meta_value' => $order ) );
+    }
+}
+add_action( 'pre_get_posts', 'pk_reformat_orderby' );
 
 ?>
