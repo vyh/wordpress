@@ -23,6 +23,10 @@ function monza_mod_enqueue_styles() {
         array( $parent_style ),
         wp_get_theme()->get('Version')
     );
+//     wp_enqueue_style( 'monza-mod-vyh-style',
+//         get_stylesheet_directory_uri() . '/style.css',
+//         array( $parent_style )
+//     );
 }
 add_action( 'wp_enqueue_scripts', 'monza_mod_enqueue_styles' );
 
@@ -254,6 +258,22 @@ function action_rest_insert_quotes( $post, $request, $true ) {
     }
 }
 add_action("rest_insert_quotes", "action_rest_insert_quotes", 10, 3);
+
+
+/**
+ *  include a custom template for photos search results (uses Bootstrap card columns like the archive)
+ *  Source: https://wordpress.stackexchange.com/a/89945
+ */
+function template_chooser($template) {
+    global $wp_query;
+    $post_type = get_query_var('post_type');
+    if( $wp_query->is_search && $post_type == 'photos' )
+    {
+        return locate_template('search-photos.php');
+    }
+    return $template;
+}
+add_filter('template_include', 'template_chooser'); 
 
 
 require get_template_directory() . '/../monza-mod-vyh/inc/template-tags.php';
