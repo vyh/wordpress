@@ -15,10 +15,8 @@ jQuery('.repeatable-add').click(function() {
 });
 
 jQuery('.repeatable-remove').click(function(){
-    if($('.repeatable-remove').length > 1) {
-        jQuery(this).parent().remove();
-        return false;
-    }
+	jQuery(this).parent().remove();
+	return false;
 });
 
 jQuery('.custom_repeatable').sortable({

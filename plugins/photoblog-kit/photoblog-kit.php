@@ -2,7 +2,7 @@
 /*
 Plugin Name: Photoblog Kit
 Description: Post types, taxonomies, and tools for a photography blog. Exif data icons courtesy icons8.com.
-Version: 0.1.2
+Version: 0.1.3
 Author: Nicki Hoffman
 Author URI: https://arestelle.net
 Text Domain: photoblog-kit
@@ -81,9 +81,21 @@ $pk_meta_fields = array(
         'type' => 'text',
         'format' => 'datetime'
     ),
-    'link' => array(
-        'id' => '_product_link',
-        'label' => 'Product Pages',
+    'featured' => array(
+        'id'    => 'featured',
+        'label' => 'Featured',
+        'type'  => 'checkbox',
+        'format' => ''
+    ),
+    'display-only' => array(
+        'id'    => 'display-only',
+        'label' => 'Display only (not printworthy)',
+        'type'  => 'checkbox',
+        'format' => ''
+    ),
+    'links' => array(
+        'id' => 'products',
+        'label' => 'Product Pages (new)',
         'type' => 'repeatable',
         'format' => 'url'
     )
@@ -143,6 +155,9 @@ function render_pk_meta_box( $post ){
             case 'text':
                 echo '<input type="text" name="'.$field['id'].'" id="'.$field['id'].'" value="'.$meta.'" size="30" />';
                 break;
+            case 'checkbox':
+                echo '<input type="checkbox" name="'.$field['id'].'" id="'.$field['id'].'" ',$meta ? ' checked="checked"' : '','/>';
+                break;
         }
         echo '</div>';
     }
@@ -171,7 +186,7 @@ function pk_save_meta_boxes_data( $post_id ) {
         $old = get_post_meta($post_id, $field['id'], true);
         $new = $_POST[$field['id']];
         if ( $field['type'] == 'repeatable' && $field['format'] == 'url' )
-            $new = array_map( esc_url, array_values($new) );
+            $new = array_map( esc_url, array_filter( array_values($new) ) );
         if ($new && $new != $old) {
             update_post_meta($post_id, $field['id'], $new);
         } elseif ('' == $new && $old) {
@@ -404,23 +419,27 @@ function pk_append_content( $content ) {
         return $content;
 
     // product links
-    $links = get_post_meta( $post->ID, $pk_meta_fields['link']['id'], true );
-    $link_prefix = '<p style="padding-top: 40px;">' . __( 'Prints', 'photoblog-kit' ) . ': ';
-    $link_html = __( 'not yet available for this image; comment/contact me with requests.', 'photoblog-kit' ) . '</p>';
-    if ( $links ) {
-        $name_map = product_page_name_map();
-        $link_arr = array();
-        foreach ( $links as $url ) {
-            if ( $url ) {
-                $name = pk_domain_from_url( $url );
-                if ( $name_map[$name] ) $name = $name_map[$name];
-                array_push( $link_arr, '<a href="' . $url . '">' . ucwords( $name ) . '</a>' );
+    if ( get_post_meta( $post->ID, $pk_meta_fields['display-only']['id'], true) ) {
+        $link_html = '<p style="padding-top: 40px;"></p>';
+    } else {
+        $link_prefix = '<p style="padding-top: 40px;">' . __( 'Prints', 'photoblog-kit' ) . ': ';
+        $link_html = __( 'not yet available for this image; comment/contact me with requests.', 'photoblog-kit' ) . '</p>';
+        $links = get_post_meta( $post->ID, $pk_meta_fields['links']['id'], true );
+        if ( $links ) {
+            $name_map = product_page_name_map();
+            $link_arr = array();
+            foreach ( $links as $url ) {
+                if ( $url ) {
+                    $name = pk_domain_from_url( $url );
+                    if ( $name_map[$name] ) $name = $name_map[$name];
+                    array_push( $link_arr, '<a href="' . $url . '">' . ucwords( $name ) . '</a>' );
+                }
             }
+            if ( $link_arr )
+                $link_html = implode( ', ', $link_arr ) . '</p>';
         }
-        if ( $link_arr )
-            $link_html = implode( ', ', $link_arr ) . '</p>';
+        $link_html = $link_prefix . $link_html . "\n";
     }
-    $link_html = $link_prefix . $link_html . "\n";
 
     // albums
     $albums = wp_get_post_terms( $post->ID, 'albums' );
@@ -461,7 +480,7 @@ add_filter( 'the_content', 'pk_append_content' );
 /**
  * Enable use of orderby=timestamp to sort by timestamp
  */
-function pk_reformat_orderby( $query ) {
+function pk_order_by_timestamp( $query ) {
     if ( ! isset( $query->query_vars['orderby'] ) )
         return;
 
@@ -471,6 +490,38 @@ function pk_reformat_orderby( $query ) {
         $query->set( 'orderby', array( 'meta_value' => $order ) );
     }
 }
-add_action( 'pre_get_posts', 'pk_reformat_orderby' );
+add_action( 'pre_get_posts', 'pk_order_by_timestamp' );
+
+
+/**
+ * Enable use of {meta_field_id}=true to filter by meta field presence
+ */
+function pk_filter_attributes( $query ) {
+    if ( ! $query->is_main_query() )
+        return;
+
+    if ( isset( $_GET['featured'] ) ) {
+        $featured = $_GET['featured'] == 'true' ? 'EXISTS' : 'NOT EXISTS';
+        $query->set( 'meta_query', array( array( 'key' => 'featured',
+                                                 'compare' => $featured) ) );
+    } 
+    elseif ( isset( $_GET['prints'] ) ) {
+        $available = $_GET['prints'] == 'true' ? 'EXISTS' : 'NOT EXISTS';
+        $query->set( 'meta_query', array( array( 'key' => 'products',
+                                                 'compare' => $available) ) );
+    }
+}
+add_action( 'pre_get_posts', 'pk_filter_attributes' );
+
+
+/**
+ * Register 'prints' and 'featured' query vars for visibility in get_query_var
+ */
+function pk_add_query_vars_filter( $vars ) {
+  $vars[] = "featured";
+  $vars[] = "prints";
+  return $vars;
+}
+add_filter( 'query_vars', 'pk_add_query_vars_filter' );
 
 ?>

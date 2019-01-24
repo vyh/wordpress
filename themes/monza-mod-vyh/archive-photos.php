@@ -16,12 +16,26 @@ get_header(); ?>
                 <h1 class="page-title"><?php post_type_archive_title(); ?></h1>
                 <?php
                 the_archive_description( '<div class="archive-description">', '</div>' );
+                $add_br = false;
                 if ( is_tax() ) {
                     $tname = get_query_var('taxonomy');
                     $tterm = get_query_var('term');
                     $tterm = get_term_by( 'slug', $tterm, $tname )->name;
-                    if ( $tname || $tterm ) echo '<h3>' . ucwords($tname) . ': ' . $tterm . '</h3><br />';
+                    if ( $tname || $tterm ) {
+                        echo '<h3>' . ucwords($tname) . ': ' . $tterm . '</h3>';
+                        $add_br = true;
+                    }
+                } 
+                if ( get_query_var( 'featured' ) ) {
+                    $filter = get_query_var( 'featured' ) == 'true' ? 'featured' : 'not featured';
+                    echo '<h3>' . 'Showing: ' . $filter . '</h3><br />';
+                    $add_br = true;
+                } elseif ( get_query_var( 'prints' ) ) {
+                    $filter = get_query_var( 'prints' ) == 'true' ? 'prints available' : 'prints not yet available';
+                    echo '<h3>' . 'Showing: ' . $filter . '</h3><br />';
+                    $add_br = true;
                 }
+                if ( $add_br ) echo '<br />';
                 ?>
             </header>
         </div><!-- .page-header -->
