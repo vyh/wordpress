@@ -2,7 +2,7 @@
 /*
 Plugin Name: Photoblog Kit
 Description: Post types, taxonomies, and tools for a photography blog. Exif data icons courtesy icons8.com.
-Version: 0.1.3
+Version: 0.1.4
 Author: Nicki Hoffman
 Author URI: https://arestelle.net
 Text Domain: photoblog-kit
@@ -52,6 +52,17 @@ function pk_register_type_and_tax() {
     );
 }
 add_action( 'init', 'pk_register_type_and_tax' );
+
+
+/**
+ * Support Jetpack's Publicize feature on photo posts, if it's available
+ */
+function pk_add_publicize_support() {
+    if ( class_exists( 'Jetpack' ) && Jetpack::is_module_active( 'publicize' ) ) {
+        add_post_type_support( 'photos', 'publicize' );
+    }
+}
+add_action( 'plugins_loaded', 'pk_add_publicize_support' );
 
 
 /**
