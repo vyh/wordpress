@@ -44,9 +44,14 @@ get_header();
                 get_template_part( 'template-parts/content', 'search' );
                 echo '</div>';
 
-            endwhile;
-
+            endwhile; ?>
+        </div>
+        <div class="col-md-1 col-sm-0"></div>
+        <div class="col-md-1 col-sm-0"></div>
+        <div class="col-md-10 col-sm-12"><?php
             the_posts_navigation();
+            ?>
+        </div><?php
 
         else :
 

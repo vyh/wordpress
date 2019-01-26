@@ -262,18 +262,36 @@ add_action("rest_insert_quotes", "action_rest_insert_quotes", 10, 3);
 
 /**
  *  include a custom template for photos search results (uses Bootstrap card columns like the archive)
+ *  redirect album and keyword archives to use photo archive template
  *  Source: https://wordpress.stackexchange.com/a/89945
+ *  https://www.billerickson.net/code/use-same-template-for-taxonomy-and-cpt-archive/
  */
-function template_chooser($template) {
+function mm_template_chooser( $template ) {
     global $wp_query;
     $post_type = get_query_var('post_type');
-    if( $wp_query->is_search && $post_type == 'photos' )
-    {
+    if ( $wp_query->is_search && $post_type == 'photos' ) {
         return locate_template('search-photos.php');
+    } elseif ( is_tax( 'albums' ) || is_tax( 'keywords' ) ) {
+        $template = get_query_template( 'archive-photos' );
     }
     return $template;
 }
-add_filter('template_include', 'template_chooser'); 
+add_filter('template_include', 'mm_template_chooser');
+
+
+/**
+ *  increase the posts_per_page to 12 for photos, keywords, and albums
+ */
+function mm_custom_posts_per_page( $query ) {
+    if ( is_admin() || ! $query->is_main_query() ) {
+       return;
+    }
+
+    if ( is_post_type_archive( 'photos' ) || is_tax( 'albums' ) || is_tax( 'keywords' ) ) {
+       $query->set( 'posts_per_page', 12 );
+    }
+}
+add_filter( 'pre_get_posts', 'mm_custom_posts_per_page' );
 
 
 require get_template_directory() . '/../monza-mod-vyh/inc/template-tags.php';
