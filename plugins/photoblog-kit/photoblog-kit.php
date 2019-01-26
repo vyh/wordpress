@@ -26,6 +26,7 @@ function pk_register_type_and_tax() {
                 'editor',
                 'thumbnail',
                 'comments',
+                'trackbacks',
                 'post-formats'
             ),
             'rewrite' => array( 'slug' => 'photographs' ),
@@ -37,7 +38,10 @@ function pk_register_type_and_tax() {
         'keywords',
         'photos',
         array(
-            'label' => __( 'Keywords', 'photoblog-kit' ),
+            'labels' => array(
+                'name' => __( 'Keywords', 'photoblog-kit' ),
+                'singular_name' => __( 'Keyword', 'photoblog-kit' )
+            ),
             'rewrite' => array( 'slug' => 'keyword' )
         )
     );
@@ -46,7 +50,10 @@ function pk_register_type_and_tax() {
         'albums',
         'photos',
         array(
-            'label' => __( 'Albums', 'photoblog-kit' ),
+            'labels' => array(
+                'name' => __( 'Albums', 'photoblog-kit' ),
+                'singular_name' => __( 'Album', 'photoblog-kit' )
+            ),
             'rewrite' => array( 'slug' => 'album' )
         )
     );
