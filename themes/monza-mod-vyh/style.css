@@ -4,7 +4,7 @@
     Description: Monza child theme with style fixes & tweaks and separate post types & taxonomies for the quotes section
     Author: Nicki Hoffman
     Author URI: https://arestelle.net
-    Version: 1.2.4
+    Version: 1.2.5
     License: GNU General Public License v2 or later
     License URI:  http://www.gnu.org/licenses/gpl-2.0.html
 */
@@ -27,6 +27,23 @@ blockquote {
     border-top: 1px solid #eee;
     padding: 50px 0 100px 0;
     margin-top: 50px;
+}
+
+.site-footer-widgets {
+    border-top: 1px solid #eee;
+    padding: 40px 0 30px 0;
+    margin-top: 50px;
+    margin-bottom: -50px;
+    background: #f5f5f5;
+}
+
+.site-footer-widgets .widget-area {
+    float: left;
+}
+
+.site-footer-widgets .widget {
+    border: 0;
+    margin-bottom: 0;
 }
 
 .wp-caption {

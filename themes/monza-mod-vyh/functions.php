@@ -261,7 +261,7 @@ add_action("rest_insert_quotes", "action_rest_insert_quotes", 10, 3);
 
 
 /**
- *  include a custom template for photos search results (uses Bootstrap card columns like the archive)
+ *  include a custom template for photos search results (uses Bootstrap card columns like the archive);
  *  redirect album and keyword archives to use photo archive template
  *  Source: https://wordpress.stackexchange.com/a/89945
  *  https://www.billerickson.net/code/use-same-template-for-taxonomy-and-cpt-archive/
@@ -292,6 +292,43 @@ function mm_custom_posts_per_page( $query ) {
     }
 }
 add_filter( 'pre_get_posts', 'mm_custom_posts_per_page' );
+
+
+/**
+ * Register footer widget areas.
+ *
+ * @link https://www.tipsandtricks-hq.com/how-to-add-widgets-to-wordpress-themes-footer-1033
+ */
+function mm_widgets_init() {
+    register_sidebar( array(
+        'name' => esc_html__( 'Footer Sidebar 1', 'monza' ),
+        'id' => 'footer-sidebar-1',
+        'description'   => esc_html__( 'Left footer widget area', 'monza' ),
+        'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+        'after_widget' => '</aside>',
+        'before_title' => '<h2 class="widget-title">',
+        'after_title' => '</h2>',
+    ) );
+    register_sidebar( array(
+        'name' => esc_html__( 'Footer Sidebar 2', 'monza' ),
+        'id' => 'footer-sidebar-2',
+        'description'   => esc_html__( 'Middle footer widget area', 'monza' ),
+        'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+        'after_widget' => '</aside>',
+        'before_title' => '<h2 class="widget-title">',
+        'after_title' => '</h2>',
+    ) );
+    register_sidebar( array(
+        'name' => esc_html__( 'Footer Sidebar 3', 'monza' ),
+        'id' => 'footer-sidebar-3',
+        'description'   => esc_html__( 'Right footer widget area', 'monza' ),
+        'before_widget' => '<aside id="%1$s" class="widget %2$s">',
+        'after_widget' => '</aside>',
+        'before_title' => '<h2 class="widget-title">',
+        'after_title' => '</h2>',
+    ) );
+}
+add_action( 'widgets_init', 'mm_widgets_init' );
 
 
 require get_template_directory() . '/../monza-mod-vyh/inc/template-tags.php';
