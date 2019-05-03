@@ -22,7 +22,8 @@ sudo chmod a+x ./certbot-auto
 # I have not dug into what this does or what the errors were.
 sudo ./certbot-auto
 
-# Generate certificate; replace DOMAIN with your domain.
+# Generate certificate; replace DOMAIN with your domain. You can add more -d flags for more domains;
+# you probably want to include your domain both with and without the 'www' subdomain.
 sudo ./certbot-auto certonly --webroot -w /opt/bitnami/apps/wordpress/htdocs/ -d DOMAIN
 
 # Symlink from default Apache/Bitnami certificate location to Let's Encrypt location
