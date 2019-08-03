@@ -25,7 +25,7 @@ get_header(); ?>
                         $tname = 'source' == $tname ? 'author' : $tname;
                         if ( $tname || $tterm ) echo '<h3>' . ucwords($tname) . ': ' . $tterm . '</h3><br />';
                     } else {
-                        $wid = $_GET['work_quoted'];
+                        $wid = isset($_GET['work_quoted']) ? $_GET['work_quoted'] : null;
                         if ( $wid ) {
                             $wtitle = get_post($wid)->post_title;
                             if ( $wtitle ) echo '<h3>Work: <em>' . $wtitle . '</em></h3><br />';
