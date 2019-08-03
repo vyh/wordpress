@@ -28,8 +28,10 @@
         // include authors (each linked to 'source' archive of quotes) on title line, first one last-name-first
         if ( $authors ) {
             $author = explode(' ', $authors[0]->name);
-            if ( $author[1] ) $author = join(', ', array(array_pop($author), join(' ', $author)));  // L.N. first
-            else $author = $author[0];  // one-word name, e.g. Aristotle
+            if ( isset($author[1]) && !empty($author[1]) )
+                $author = join(', ', array(array_pop($author), join(' ', $author)));  // L.N. first
+            else
+                $author = $author[0];  // one-word name, e.g. Aristotle
             echo  '<a href="/source/' . $authors[0]->slug . '?post_type=quotes">' . $author . '</a>';
             // the other authors
             foreach ( array_slice($authors, 1) as $author ) {
@@ -45,7 +47,7 @@
         ?>
         <h5><?php
             // print out the translators, if any, below the author/title line
-            if ( $translators[1] ) echo 'translators: ';
+            if ( isset($translators[1]) ) echo 'translators: ';
             else echo 'translator: ';
             echo $translators[0]->name;
             foreach ( array_slice( $translators, 1 ) as $translator ) {
